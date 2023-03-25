@@ -13,8 +13,8 @@ const io = new Server(server, {
 })
 
 io.on('connection', (socket) =>  {
-    socket.on('message', (value) => {
-        socket.broadcast.emit('incoming-message', value);
+    socket.on('incoming-message', (value: string) => {
+        socket.broadcast.emit('outgoing-message', value);
     })
 })
 
