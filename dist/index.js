@@ -9,8 +9,12 @@ const io = new Server(server, {
     }
 });
 io.on('connection', (socket) => {
-    socket.on('message', (value) => {
-        socket.broadcast.emit('incoming-message', value);
+    socket.on('incoming-message', (value) => {
+        console.log(value);
+        socket.broadcast.emit('outgoing-message', value);
+    });
+    socket.on('client-ready', () => {
+        console.log('client-ready');
     });
 });
 server.listen(3001, () => {
