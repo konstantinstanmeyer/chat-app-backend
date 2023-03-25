@@ -13,13 +13,18 @@ const io = new Server(server, {
 })
 
 io.on('connection', (socket) =>  {
-    socket.on('incoming-message', (value: string) => {
-        console.log(value);
-        socket.broadcast.emit('outgoing-message', value);
+    // socket.on('client-ready', () => {
+    //     console.log('client-ready');
+    // })
+
+    socket.on('joinRoom', ({ username, room }) => {
+        
     })
 
-    socket.on('client-ready', () => {
-        console.log('client-ready');
+    socket.on('outgoingMessage', (value: string) => {
+        const user = socket.id;
+
+        io.to(user.room).emit('incomingMessage', value);
     })
 })
 
