@@ -18,7 +18,10 @@ io.on('connection', (socket) =>  {
     // })
 
     socket.on('joinRoom', ({ username, room }) => {
-        
+        console.log(io.sockets.adapter.rooms.has(room))
+        socket.join(room);
+
+        io.to(room).emit('error', 'working!');
     })
 
     socket.on('outgoingMessage', (value: string) => {

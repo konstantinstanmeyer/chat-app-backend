@@ -9,12 +9,22 @@ const io = new Server(server, {
     }
 });
 io.on('connection', (socket) => {
-    socket.on('incoming-message', (value) => {
-        console.log(value);
-        socket.broadcast.emit('outgoing-message', value);
+    // socket.on('client-ready', () => {
+    //     console.log('client-ready');
+    // })
+    socket.on('createRoom', ({ username, room }) => {
+        socket.join(room);
+        console.log(socket.rooms.has("room1"));
     });
-    socket.on('client-ready', () => {
-        console.log('client-ready');
+    socket.on('joinRoom', ({ username, room }) => {
+        console.log(io.sockets.adapter.rooms.has(room));
+        socket.join(room);
+        io.to(room).emit('error', 'working!');
+        console.log(io.sockets.adapter.rooms.has(room));
+    });
+    socket.on('outgoingMessage', (value) => {
+        const user = socket.id;
+        io.to(user.room).emit('incomingMessage', value);
     });
 });
 server.listen(3001, () => {
