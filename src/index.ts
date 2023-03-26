@@ -2,6 +2,11 @@ const express = require('express');
 const { Server } = require("socket.io");
 const http = require('http');
 
+interface Message {
+    username: string;
+    message: string;
+}
+
 const app = express();
 
 const server = http.createServer(app);
@@ -24,10 +29,11 @@ io.on('connection', (socket) =>  {
         io.to(room).emit('error', 'working!');
     })
 
-    socket.on('outgoingMessage', (value: string) => {
-        const user = socket.id;
-
-        io.to(user.room).emit('incomingMessage', value);
+    socket.on('outgoingMessage', (value: Message) => {
+        const user = socket.id
+ 
+        io.to(user.room).emit('error', 'woah!');
+        // socket.to("room1").emit('message', `${value.username}: ${value.message}`);
     })
 })
 
