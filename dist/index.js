@@ -13,15 +13,13 @@ io.on('connection', (socket) => {
     //     console.log('client-ready');
     // })
     socket.on('joinRoom', ({ username, room }) => {
-        console.log(io.sockets.adapter.rooms.has(room));
+        // console.log(io.sockets.adapter.rooms.has(room))
         socket.join(room);
+        console.log(`${username} has join room: ${room}`);
         io.to(room).emit('error', 'working!');
     });
-    socket.on('outgoingMessage', (value) => {
-        const user = socket.id;
-        socket.join("room1");
-        // io.to('room1').emit('error', 'pasiudhasd!');
-        io.to("room1").emit('error', 'woah!');
+    socket.on('sendMessage', (message) => {
+        socket.to(message.room).emit('receiveMessage', { username: message.username, message: message.message });
         // socket.to("room1").emit('message', `${value.username}: ${value.message}`);
     });
 });

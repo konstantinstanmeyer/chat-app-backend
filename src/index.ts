@@ -5,6 +5,7 @@ const http = require('http');
 interface Message {
     username: string;
     message: string;
+    room: string;
 }
 
 const app = express();
@@ -23,16 +24,16 @@ io.on('connection', (socket) =>  {
     // })
 
     socket.on('joinRoom', ({ username, room }) => {
-        console.log(io.sockets.adapter.rooms.has(room))
+        // console.log(io.sockets.adapter.rooms.has(room))
         socket.join(room);
+
+        console.log(`${username} has join room: ${room}`)
 
         io.to(room).emit('error', 'working!');
     })
 
-    socket.on('outgoingMessage', (value: Message) => {
-        const user = socket.id
- 
-        io.to(user.room).emit('error', 'woah!');
+    socket.on('sendMessage', (message: Message) => {
+        socket.to(message.room).emit('receiveMessage', { username: message.username, message: message.message });
         // socket.to("room1").emit('message', `${value.username}: ${value.message}`);
     })
 })
